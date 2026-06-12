@@ -7,15 +7,15 @@ fn main(){
 
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        println!("uso:");
-        println!("manual");
-        println!("petgraph");
+        println!("Use para ejeuctar:");
+        println!("cargo run manual");
+        println!("cargo run petgraph");
         return;
     }
 
     match args[1].as_str() {
-        "manual" => VersionManual::run(),
-        "petgraph" => VersionPetgraph::run(),
-        _ => println!("Unknown version: {}", args[1]),
+        "manual" => VersionManual::ejecutar(),
+        "petgraph" => VersionPetgraph::ejecutar(),
+        _ => println!("Opcion invalida"),
     }
 }
