@@ -265,7 +265,7 @@ fn mostrar_diagrama(&self, ruta: Option<&Vec<usize>>) {
             // "║  Ruta resaltada: " = 19 chars visibles
             // " → " = 3 chars visibles
             // Total fijo visible dentro de los 70: 19 + o + 3 + d
-            let contenido = format!("  Ruta resaltada: {} → {}", o, d);
+            let contenido = format!(" Ruta resaltada: {} → {}", o, d);
             let vis = contenido.chars().count();
             let relleno = if 70 > vis { 70 - vis } else { 0 };
             print!("{}", "║".yellow());
@@ -274,7 +274,7 @@ fn mostrar_diagrama(&self, ruta: Option<&Vec<usize>>) {
             print!("{}", " → ");
             print!("{}", d.bright_red().bold());
             print!("{}", " ".repeat(relleno));
-            println!("{}", "║".yellow());
+            println!("{}", " ║".yellow());
         }
         println!("{}", format!("╠{}╣", sep).yellow());
 
@@ -377,7 +377,7 @@ println!("=================================");
     ];
 
     println!("{}", "╔══════════════════════════════════════════════════════════╗".green());
-    println!("{}", "║      BFS — RUTAS CON MENOS ESTACIONES                   ║".green());
+    println!("{}", "║      BFS — RUTAS DE ALGUNAS ESTACIONES                   ║".green());
     println!("{}", "╚══════════════════════════════════════════════════════════╝".green());
     println!();
 
@@ -407,7 +407,7 @@ println!("=================================");
                 let saltos  = camino.len() - 1;
                 println!("  {} {}   {} {}",
                     "Paradas intermedias:".bright_cyan(), paradas.to_string().bright_white().bold(),
-                    "Saltos totales:".bright_cyan(),      saltos.to_string().bright_white().bold());
+                    "Caminos totales:".bright_cyan(),      saltos.to_string().bright_white().bold());
 
                 red.mostrar_diagrama(Some(&camino));
             }
