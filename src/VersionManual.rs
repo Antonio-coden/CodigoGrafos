@@ -68,8 +68,87 @@ fn mostrar_red(&self) {
         println!();
     }
 
+     //Funcion mas importante la que hace la funcion de encontrar la ruta 
+     //mas corta entre dos estaciones por medio de un de busqueda de anchura,
+     //se le pasa el indice de la estacion de origen y el indice de la estacion destino,
+     // devuelve un vector con los indices de las estaciones por donde pasa la ruta 
+     // encontrada o None si no existe ruta.
+     fn bfs(&self, origen: usize, destino: usize) -> Option<Vec<usize>> {
+        // Número total de estaciones.
+        let n = self.estaciones.len();
+        // Indica si una estación ya fue visitada.
+        let mut visitado = vec![false; n];
+        // Guarda quién descubrió cada nodo.
+        let mut padre: Vec<Option<usize>> = vec![None; n];
+        // Cola utilizada por BFS.
+        let mut cola: VecDeque<usize> = VecDeque::new();
+        // El origen es la primera estación visitada.
+        visitado[origen] = true;
+        // Se agrega a la cola.
+        cola.push_back(origen);
+        // Mientras existan estaciones pendientes.
+        while let Some(actual) = cola.pop_front() {
+            // Si llegamos al destino,
+            // reconstruimos el camino encontrado.
+            if actual == destino {
+                return Some(
+                    self.reconstruir_camino(
+                        &padre,
+                        origen,
+                        destino
+                    )
+                );
+            }
+            // Recorremos los vecinos.
+            for &v in &self.adyacencia[actual] {
+                // Solo procesamos estaciones no visitadas.
+                if !visitado[v] {
+                    // Se marca como visitada.
+                    visitado[v] = true;
+                    // Guardamos desde dónde fue alcanzada.
+                    padre[v] = Some(actual);
+                    // Se agrega a la cola.
+                    cola.push_back(v);
+                }
+            }
+        }
+        // No existe ruta.
+        None
+    }
 
-    
+    //Funcion que cumple la con la tarea de reconstruir el camino encontrado por BFS,
+    //se le pasa el vector de padres, el indice de origen y el indice de destino, 
+    //devuelve un vector con los indices de las estaciones por donde pasa la ruta encontrada.
+    //En pocas palabras reordena el camino encontrado por BFS para que quede 
+    //en el orden correcto desde origen a destino.
+    fn reconstruir_camino(
+        &self,
+        padre: &[Option<usize>],
+        origen: usize,
+        destino: usize
+    ) -> Vec<usize> {
+        let mut camino = Vec::new();
+        // Comenzamos desde el destino.
+        let mut actual = destino;
+        loop {
+            // Guardamos el nodo actual.
+            camino.push(actual);
+            // Si llegamos al origen terminamos.
+            if actual == origen {
+                break;
+            }
+            // Retrocedemos al padre.
+            match padre[actual] {
+                Some(p) => actual = p,
+                None => break,
+            }
+        }
+        // El camino quedó al revés.
+        camino.reverse();
+        camino
+    }
+
+
 fn mostrar_diagrama(&self, ruta: Option<&Vec<usize>>) {
         // let coords: Este trozo de codigo son las coordenadas de cada estacion para luego dibujar el 
         // diagrama de la red, se asignan manualmente para que quede visualmente bien, no es 
