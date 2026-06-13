@@ -363,6 +363,64 @@ println!("=================================");
     red.mostrar_red();
     red.mostrar_diagrama(None);
 
+
+    //se crea el vecto de busqueda de rutas entre estaciones, 
+    // cada tupla tiene el indice de la estacion de origen, 
+    // el indice de la estacion destino, el nombre de la estacion de origen 
+    // y el nombre de la estacion destino, esto se hace para luego mostrar los 
+    // resultados de las busquedas de rutas entre estas estaciones.
+    let busquedas = vec![
+        (zentova,  nexara,   "Zentova",  "Nexara"),
+        (caldrix,  velstrom, "Caldrix",  "Velstrom"),
+        (thornex,  myrenth,  "Thornex",  "Myrenth"),
+        (dralion,  zentova,  "Dralion",  "Zentova"),
+    ];
+
+    println!("{}", "╔══════════════════════════════════════════════════════════╗".green());
+    println!("{}", "║      BFS — RUTAS CON MENOS ESTACIONES                   ║".green());
+    println!("{}", "╚══════════════════════════════════════════════════════════╝".green());
+    println!();
+
+    //aqui se hace la busqueda de rutas entre las estaciones definidas en el vector de busqueda.
+    for (origen, destino, nom_o, nom_d) in busquedas {
+        println!("  {} {} {} {}",
+            "Ruta:".bright_green().bold(),
+            nom_o.bright_white().bold(),
+            "→".bright_green(),
+            nom_d.bright_white().bold());
+
+            //Aqui se hace la tarea de crear el camino en el diagarama 
+        match red.bfs(origen, destino) {
+            Some(camino) => {
+                print!("  ");
+                for (i, &idx) in camino.iter().enumerate() {
+                    if i == 0 || i == camino.len() - 1 {
+                        print!("{}", red.estaciones[idx].bright_yellow().bold());
+                    } else {
+                        print!("{}", red.estaciones[idx].white());
+                    }
+                    if i < camino.len() - 1 { print!("{}", " → ".bright_green()); }
+                }
+                //Aqui damos una decripcion de los saltos dados por estaciones y vias.
+                println!();
+                let paradas = camino.len() - 2;
+                let saltos  = camino.len() - 1;
+                println!("  {} {}   {} {}",
+                    "Paradas intermedias:".bright_cyan(), paradas.to_string().bright_white().bold(),
+                    "Saltos totales:".bright_cyan(),      saltos.to_string().bright_white().bold());
+
+                red.mostrar_diagrama(Some(&camino));
+            }
+            None => println!("  {}", "No existe ruta entre estas estaciones.".bright_red()),
+        }
+
+        println!("  {}", "─".repeat(56).bright_black());
+        println!();
+    }
+
+    println!("{}", "  Fin del recorrido RedRail.".bright_green().bold());
+    println!();
+
 }
 
 
